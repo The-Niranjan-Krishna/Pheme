@@ -1,5 +1,5 @@
 ## Pheme : A Web Framework written in Python
 # To-do
 - [X] Serving Paths
-- [ ] Request Parsing
+- [X] Request Parsing
 - [ ] Post request 

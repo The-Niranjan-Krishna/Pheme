@@ -1,5 +1,6 @@
 import socket
-class App:
+from .parser import Parser
+class Pheme:
     def __init__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -20,18 +21,15 @@ class App:
                     break
                 complete_request+=request
                 request = client.recv(1024).decode()
-            headers = complete_request.split("\n")[0]
+            req = Parser(request)
+            req.parse()
+            res= None
+            print(req.path['uri'])
 
-            path = headers.split()[1]
-            res = None
-            if path in self.content:
-                result = self.content[path]()
-                res = self.response_codes["200"]+result
-
-            else:
-
+            try:
+                res = self.response_codes["200"] + self.content[req.path['uri']](req)
+            except:
                 res = self.response_codes["404"]+"Path not found"
-
             client.sendall(res.encode())
             client.close()
 
